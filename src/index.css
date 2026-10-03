@@ -1,0 +1,212 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  DocNest design tokens.
+
+  Phase 1 ships the light theme only. Dark values are declared so the token
+  structure is ready for a future dark mode without touching components.
+*/
+:root {
+  --background: #f6f7f9;
+  --surface: #ffffff;
+  --surface-muted: #f2f4f7;
+  --surface-hover: #f9fafb;
+
+  --foreground: #171a21;
+  --muted-foreground: #5c6470;
+  --subtle-foreground: #656d7a;
+
+  --border: #e3e7ed;
+  --border-strong: #d1d7e0;
+
+  --brand: #2e4bc7;
+  --brand-hover: #253ea9;
+  --brand-foreground: #ffffff;
+  --brand-subtle: #eef1fc;
+  --brand-subtle-foreground: #24388f;
+
+  --ring: #2e4bc7;
+
+  --radius: 0.75rem;
+
+  --shadow-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.06);
+  --shadow-popover: 0 12px 32px -8px rgb(16 24 40 / 0.16),
+    0 4px 10px -4px rgb(16 24 40 / 0.08);
+
+  color-scheme: light;
+}
+
+.dark {
+  --background: #0d1016;
+  --surface: #151a22;
+  --surface-muted: #1b212b;
+  --surface-hover: #1f2632;
+
+  --foreground: #e8ebf1;
+  --muted-foreground: #9aa4b2;
+  --subtle-foreground: #7d8794;
+
+  --border: #242b36;
+  --border-strong: #333c49;
+
+  --brand: #7c92f5;
+  --brand-hover: #93a6f8;
+  --brand-foreground: #0d1016;
+  --brand-subtle: #1b2233;
+  --brand-subtle-foreground: #b9c5fb;
+
+  --ring: #7c92f5;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 1px 3px rgb(0 0 0 / 0.25);
+  --shadow-popover: 0 12px 32px -8px rgb(0 0 0 / 0.5), 0 4px 10px -4px rgb(0 0 0 / 0.4);
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-hover: var(--surface-hover);
+
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle-foreground: var(--subtle-foreground);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-subtle: var(--brand-subtle);
+  --color-brand-subtle-foreground: var(--brand-subtle-foreground);
+
+  --radius-app: var(--radius);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-popover: var(--shadow-popover);
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Visible, consistent keyboard focus everywhere. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background-color: var(--brand-subtle);
+    color: var(--brand-subtle-foreground);
+  }
+}
+
+@layer utilities {
+  /* Subtle entrance used for page-level content. */
+  .animate-enter {
+    animation: docnest-enter 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animate-overlay-in {
+    animation: docnest-fade-in 180ms ease-out;
+  }
+
+  .animate-overlay-out {
+    animation: docnest-fade-out 140ms ease-in forwards;
+  }
+
+  .animate-dialog-in {
+    animation: docnest-dialog-in 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .animate-dialog-out {
+    animation: docnest-dialog-out 140ms ease-in forwards;
+  }
+}
+
+@keyframes docnest-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes docnest-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes docnest-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes docnest-dialog-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes docnest-dialog-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
