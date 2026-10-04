@@ -1,23 +1,33 @@
-import { Clock, Lock, Mail, User } from 'lucide-react'
+import { Clock, LogOut, ShieldCheck, type LucideIcon } from 'lucide-react'
 
+import { GoogleMark } from '@/components/auth/GoogleMark'
+import { UserAvatar } from '@/components/auth/UserAvatar'
 import { SettingsRow } from '@/components/SettingsRow'
 import { SettingsSection } from '@/components/SettingsSection'
 import { PageHeader } from '@/components/layout/PageHeader'
-import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
+import { useAuth } from '@/hooks/useAuth'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { APP_NAME, APP_TAGLINE, APP_VERSION } from '@/lib/constants'
 import { SettingsSectionIcons } from '@/lib/icons'
+import { getUserDisplayName, getUserEmail, getUserProviderLabel } from '@/lib/user'
 import { cn } from '@/lib/utils'
 
-const disabledFieldClass =
-  'bg-surface-muted text-subtle-foreground disabled:cursor-not-allowed disabled:opacity-100'
-
 /** Read-only value used where a setting exists but its feature does not yet. */
-function Unavailable({ icon: Icon, children }: { icon: typeof Lock; children: string }) {
+function Unavailable({ icon: Icon, children }: { icon: LucideIcon; children: string }) {
   return (
     <span className="flex items-center gap-2 text-sm text-subtle-foreground">
       <Icon aria-hidden="true" className="size-4 shrink-0" />
+      {children}
+    </span>
+  )
+}
+
+/** Read-only value drawn from the authenticated session. */
+function ReadOnlyValue({ children }: { children: string }) {
+  return (
+    <span className="flex items-center justify-end gap-2 truncate text-sm font-medium text-foreground sm:justify-start">
       {children}
     </span>
   )
@@ -53,6 +63,12 @@ function ThemeOption({
 export default function Settings() {
   usePageTitle('Settings')
 
+  const { user, signOut, isSigningOut, error } = useAuth()
+
+  const displayName = getUserDisplayName(user)
+  const email = getUserEmail(user)
+  const provider = getUserProviderLabel(user)
+
   return (
     <div className="space-y-6 lg:space-y-8">
       <PageHeader
@@ -64,46 +80,61 @@ export default function Settings() {
         <SettingsSection
           icon={SettingsSectionIcons.account}
           title="Account"
-          description="Sign-in is not available yet, so these details cannot be edited."
-          badge="Coming soon"
+          description="Your DocNest account, managed through your Google sign-in."
         >
+          <div className="flex items-center gap-3.5 p-5">
+            <UserAvatar user={user} />
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-foreground">
+                {displayName ?? 'DocNest user'}
+              </p>
+              <p className="truncate text-sm text-muted-foreground">{email ?? 'No email on file'}</p>
+            </div>
+          </div>
+
           <SettingsRow
-            label="Profile"
-            description="Your name and avatar, used to personalise DocNest."
-            control={
-              <div className="flex items-center gap-2">
-                <User aria-hidden="true" className="size-4 shrink-0 text-subtle-foreground" />
-                <Input
-                  aria-label="Profile name"
-                  placeholder="Available after sign-in"
-                  disabled
-                  readOnly
-                  className={disabledFieldClass}
-                />
-              </div>
-            }
+            label="Name"
+            description="Taken from your Google profile."
+            control={<ReadOnlyValue>{displayName ?? 'Not provided by Google'}</ReadOnlyValue>}
           />
           <SettingsRow
             label="Email"
-            description="Used for sign-in and, later, expiry reminders."
+            description="Your DocNest sign-in address."
+            control={<ReadOnlyValue>{email ?? 'Not provided by Google'}</ReadOnlyValue>}
+          />
+          <SettingsRow
+            label="Authentication"
+            description="How you sign in to DocNest."
             control={
-              <div className="flex items-center gap-2">
-                <Mail aria-hidden="true" className="size-4 shrink-0 text-subtle-foreground" />
-                <Input
-                  type="email"
-                  aria-label="Email address"
-                  placeholder="Available after sign-in"
-                  disabled
-                  readOnly
-                  className={disabledFieldClass}
-                />
-              </div>
+              <span className="flex items-center justify-end gap-2 text-sm font-medium text-foreground sm:justify-start">
+                <GoogleMark className="size-4" />
+                {provider ?? 'Unknown provider'}
+              </span>
             }
           />
           <SettingsRow
-            label="Password"
-            description="Set and rotate the password that protects your vault."
-            control={<Unavailable icon={Lock}>Available after sign-in</Unavailable>}
+            label="Sign out"
+            description="Ends this session on this device. You will need to sign in again."
+            control={
+              <div className="flex flex-col items-stretch gap-2 sm:items-end">
+                <Button
+                  variant="secondary"
+                  onClick={() => void signOut()}
+                  disabled={isSigningOut}
+                  aria-busy={isSigningOut}
+                >
+                  <LogOut aria-hidden="true" />
+                  {isSigningOut ? 'Signing out…' : 'Sign out'}
+                </Button>
+                {/* On success the session is cleared and RequireAuth redirects
+                    to /login, so any error here is a sign-out failure. */}
+                {error ? (
+                  <p role="alert" className="max-w-56 text-xs leading-relaxed text-foreground">
+                    {error}
+                  </p>
+                ) : null}
+              </div>
+            }
           />
         </SettingsSection>
 
@@ -120,8 +151,8 @@ export default function Settings() {
           />
           <SettingsRow
             label="Session Management"
-            description="Review and sign out of active sessions on your devices."
-            control={<Unavailable icon={Lock}>Available after sign-in</Unavailable>}
+            description="Review and sign out of active sessions on your other devices."
+            control={<Unavailable icon={ShieldCheck}>Not available yet</Unavailable>}
           />
         </SettingsSection>
 

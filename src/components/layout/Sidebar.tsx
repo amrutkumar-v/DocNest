@@ -2,8 +2,10 @@ import { NavLink } from 'react-router-dom'
 
 import { AddDocumentButton } from '@/components/AddDocumentButton'
 import { Brand } from '@/components/layout/Brand'
+import { useAuth } from '@/hooks/useAuth'
 import { APP_NAME, APP_VERSION, NAV_ITEMS } from '@/lib/constants'
 import { NAV_ICONS } from '@/lib/icons'
+import { getUserEmail } from '@/lib/user'
 import { cn } from '@/lib/utils'
 
 function navItemClassName({ isActive }: { isActive: boolean }) {
@@ -17,6 +19,9 @@ function navItemClassName({ isActive }: { isActive: boolean }) {
 
 /** Desktop navigation rail. Hidden below the `lg` breakpoint. */
 export function Sidebar() {
+  const { user } = useAuth()
+  const accountLabel = getUserEmail(user) ?? 'Signed in'
+
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-border bg-surface lg:flex">
       <div className="flex h-16 shrink-0 items-center border-b border-border px-5">
@@ -55,11 +60,11 @@ export function Sidebar() {
       </nav>
 
       <div className="shrink-0 border-t border-border px-5 py-4">
-        <p className="text-xs font-medium text-muted-foreground">
+        <p className="truncate text-xs font-medium text-muted-foreground">
           {APP_NAME} v{APP_VERSION}
         </p>
-        <p className="mt-1.5 text-xs leading-relaxed text-subtle-foreground">
-          Foundation build. Storage and sign-in arrive in later phases.
+        <p className="mt-1.5 truncate text-xs text-subtle-foreground" title={accountLabel}>
+          {accountLabel}
         </p>
       </div>
     </aside>
