@@ -10,9 +10,10 @@ type AddDocumentButtonProps = Omit<ButtonProps, 'onClick' | 'children'> & {
 /**
  * The single call-to-action for adding a document.
  *
- * In Phase 1 it only opens the placeholder dialog — there is no upload flow yet.
+ * Opens the one shared upload dialog, so the sidebar, mobile header and every
+ * page-level button behave identically.
  */
-export function AddDocumentButton({ label = 'Add Document', ...props }: AddDocumentButtonProps) {
+export function AddDocumentButton({ label = 'Add document', ...props }: AddDocumentButtonProps) {
   const { openAddDocumentDialog } = useAddDocumentDialog()
 
   return (

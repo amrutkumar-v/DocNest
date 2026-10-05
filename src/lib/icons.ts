@@ -46,13 +46,13 @@ export const CATEGORY_ICONS: Record<CategoryIconName, LucideIcon> = {
   other: Shapes,
 }
 
-/** Shared icon for the not-yet-built document vault. */
+/** Shared icon for an empty document vault. */
 export const VaultEmptyIcon = FolderOpen
 
-/** Shared icon for empty upcoming-expiry content. */
+/** Shared icon for the "nothing needs attention" state. */
 export const ExpiryEmptyIcon = Bell
 
-/** Shared icon for settings categories. */
+/** Shared icons for the settings sections. */
 export const SettingsSectionIcons = {
   account: ContactRound,
   security: ShieldCheck,

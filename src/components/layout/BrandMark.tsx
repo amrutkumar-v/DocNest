@@ -4,7 +4,8 @@ import { cn } from '@/lib/utils'
  * The DocNest mark: a document sheet inside a rounded tile.
  *
  * Kept as one small, self-contained SVG so the mark can be swapped later
- * without touching any layout code.
+ * without touching any layout code. The strokes use `currentColor` inverted
+ * against the tile so it reads correctly in both themes.
  */
 export function BrandMark({ className }: { className?: string }) {
   return (

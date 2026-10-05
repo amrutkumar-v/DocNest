@@ -1,5 +1,6 @@
 import { GoogleMark } from '@/components/auth/GoogleMark'
 import { SupabaseConfigNotice } from '@/components/auth/SupabaseConfigNotice'
+import { InlineAlert } from '@/components/InlineAlert'
 import { BrandMark } from '@/components/layout/BrandMark'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/useAuth'
@@ -28,19 +29,14 @@ export default function Login() {
           <p className="mt-1.5 text-sm text-muted-foreground">{APP_TAGLINE}</p>
         </div>
 
-        <div className="mt-8 rounded-app border border-border bg-surface p-6 shadow-card">
+        <div className="mt-8 rounded-panel border border-border bg-surface p-6 shadow-card">
           <h2 className="text-base font-semibold tracking-tight">Sign in to your vault</h2>
-          <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-1.5 text-sm leading-relaxed text-pretty text-muted-foreground">
             Your documents stay private to your account. Use your Google account to continue.
           </p>
 
           {error ? (
-            <div
-              role="alert"
-              className="mt-4 rounded-lg border border-border bg-surface-muted px-3 py-2.5 text-sm leading-relaxed text-foreground"
-            >
-              {error}
-            </div>
+            <InlineAlert className="mt-4">{error}</InlineAlert>
           ) : null}
 
           <Button
@@ -59,13 +55,13 @@ export default function Login() {
             {isSigningIn ? 'Opening Google…' : 'Continue with Google'}
           </Button>
 
-          <p className="mt-4 text-xs leading-relaxed text-subtle-foreground">
+          <p className="mt-4 text-xs leading-relaxed text-pretty text-subtle-foreground">
             You will be taken to Google to confirm your identity. DocNest never sees or stores your
             Google password.
           </p>
         </div>
 
-        <p className="mt-6 text-center text-xs leading-relaxed text-subtle-foreground">
+        <p className="mt-6 text-center text-xs leading-relaxed text-pretty text-subtle-foreground">
           By continuing you agree that DocNest may store the documents you add to your personal
           vault.
         </p>

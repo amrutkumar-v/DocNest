@@ -1,7 +1,8 @@
-import { Clock, LogOut, ShieldCheck, type LucideIcon } from 'lucide-react'
+import { Clock, LogOut, Monitor, Moon, ShieldCheck, Sun, type LucideIcon } from 'lucide-react'
 
 import { GoogleMark } from '@/components/auth/GoogleMark'
 import { UserAvatar } from '@/components/auth/UserAvatar'
+import { InlineAlert } from '@/components/InlineAlert'
 import { SettingsRow } from '@/components/SettingsRow'
 import { SettingsSection } from '@/components/SettingsSection'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -9,7 +10,9 @@ import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { useAuth } from '@/hooks/useAuth'
 import { usePageTitle } from '@/hooks/usePageTitle'
+import { useTheme } from '@/hooks/useTheme'
 import { APP_NAME, APP_TAGLINE, APP_VERSION } from '@/lib/constants'
+import type { ThemePreference } from '@/context/theme-context'
 import { SettingsSectionIcons } from '@/lib/icons'
 import { getUserDisplayName, getUserEmail, getUserProviderLabel } from '@/lib/user'
 import { cn } from '@/lib/utils'
@@ -27,36 +30,54 @@ function Unavailable({ icon: Icon, children }: { icon: LucideIcon; children: str
 /** Read-only value drawn from the authenticated session. */
 function ReadOnlyValue({ children }: { children: string }) {
   return (
-    <span className="flex items-center justify-end gap-2 truncate text-sm font-medium text-foreground sm:justify-start">
-      {children}
-    </span>
+    <span className="truncate text-sm font-medium text-foreground">{children}</span>
   )
 }
 
-function ThemeOption({
-  label,
-  selected,
-  disabled,
-}: {
+const THEME_OPTIONS: {
+  value: ThemePreference
   label: string
-  selected?: boolean
-  disabled?: boolean
-}) {
+  icon: LucideIcon
+}[] = [
+  { value: 'light', label: 'Light', icon: Sun },
+  { value: 'dark', label: 'Dark', icon: Moon },
+  { value: 'system', label: 'System', icon: Monitor },
+]
+
+/** Segmented theme picker. Real radios, so arrow keys work as expected. */
+function ThemePicker() {
+  const { preference, setPreference } = useTheme()
+
   return (
-    <button
-      type="button"
-      role="radio"
-      aria-checked={selected ?? false}
-      disabled={disabled}
-      className={cn(
-        'rounded-[0.4375rem] px-3 py-1.5 text-sm font-medium transition-colors',
-        selected && 'bg-surface text-foreground shadow-xs',
-        !selected && !disabled && 'text-muted-foreground',
-        disabled && 'cursor-not-allowed text-subtle-foreground opacity-70',
-      )}
+    <div
+      role="radiogroup"
+      aria-label="Theme"
+      className="inline-flex rounded-control border border-border bg-surface-muted p-0.5"
     >
-      {label}
-    </button>
+      {THEME_OPTIONS.map(({ value, label, icon: Icon }) => {
+        const selected = preference === value
+
+        return (
+          <button
+            key={value}
+            type="button"
+            role="radio"
+            aria-checked={selected}
+            onClick={() => setPreference(value)}
+            className={cn(
+              'inline-flex items-center gap-1.5 rounded-[0.4375rem] px-2.5 py-1.5 text-[0.8125rem] font-medium',
+              'transition-[background-color,color,box-shadow] duration-[140ms]',
+              selected
+                ? 'bg-surface text-foreground shadow-xs'
+                : 'text-muted-foreground hover:text-foreground',
+            )}
+          >
+            <Icon aria-hidden="true" className="size-3.5" />
+            {label}
+          </button>
+        )
+      })}
+    </div>
   )
 }
 
@@ -73,7 +94,7 @@ export default function Settings() {
     <div className="space-y-6 lg:space-y-8">
       <PageHeader
         title="Settings"
-        description="Manage your account, security and preferences. Each section unlocks as that part of DocNest ships."
+        description="Manage your account, appearance and preferences."
       />
 
       <div className="grid gap-4 lg:gap-5">
@@ -82,8 +103,8 @@ export default function Settings() {
           title="Account"
           description="Your DocNest account, managed through your Google sign-in."
         >
-          <div className="flex items-center gap-3.5 p-5">
-            <UserAvatar user={user} />
+          <div className="flex items-center gap-3.5 px-5 py-4">
+            <UserAvatar user={user} className="size-11" />
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-foreground">
                 {displayName ?? 'DocNest user'}
@@ -106,7 +127,7 @@ export default function Settings() {
             label="Authentication"
             description="How you sign in to DocNest."
             control={
-              <span className="flex items-center justify-end gap-2 text-sm font-medium text-foreground sm:justify-start">
+              <span className="flex items-center gap-2 text-sm font-medium text-foreground">
                 <GoogleMark className="size-4" />
                 {provider ?? 'Unknown provider'}
               </span>
@@ -129,12 +150,22 @@ export default function Settings() {
                 {/* On success the session is cleared and RequireAuth redirects
                     to /login, so any error here is a sign-out failure. */}
                 {error ? (
-                  <p role="alert" className="max-w-56 text-xs leading-relaxed text-foreground">
-                    {error}
-                  </p>
+                  <InlineAlert className="sm:max-w-56">{error}</InlineAlert>
                 ) : null}
               </div>
             }
+          />
+        </SettingsSection>
+
+        <SettingsSection
+          icon={SettingsSectionIcons.appearance}
+          title="Appearance"
+          description="Choose how DocNest looks on this device."
+        >
+          <SettingsRow
+            label="Theme"
+            description="Follows your system setting unless you pick light or dark."
+            control={<ThemePicker />}
           />
         </SettingsSection>
 
@@ -147,10 +178,10 @@ export default function Settings() {
           <SettingsRow
             label="App Lock"
             description="Require a PIN or biometric unlock each time DocNest opens."
-            control={<Switch label="App Lock" />}
+            control={<Switch label="App Lock" description="Not available yet" disabled />}
           />
           <SettingsRow
-            label="Session Management"
+            label="Session management"
             description="Review and sign out of active sessions on your other devices."
             control={<Unavailable icon={ShieldCheck}>Not available yet</Unavailable>}
           />
@@ -163,35 +194,20 @@ export default function Settings() {
           badge="Planned"
         >
           <SettingsRow
-            label="Expiry Reminders"
+            label="Expiry reminders"
             description="Get a heads-up before a document's expiry date."
-            control={<Switch label="Expiry Reminders" />}
+            control={
+              <Switch
+                label="Expiry reminders"
+                description="Not available yet"
+                disabled
+              />
+            }
           />
           <SettingsRow
-            label="Reminder Preferences"
+            label="Reminder preferences"
             description="Choose how far in advance you want to be reminded."
             control={<Unavailable icon={Clock}>Not configured</Unavailable>}
-          />
-        </SettingsSection>
-
-        <SettingsSection
-          icon={SettingsSectionIcons.appearance}
-          title="Appearance"
-          description="Choose how DocNest looks on this device."
-        >
-          <SettingsRow
-            label="Theme"
-            description="Light is active. Dark mode tokens are in place, but not yet switchable."
-            control={
-              <div
-                role="radiogroup"
-                aria-label="Theme"
-                className="inline-flex rounded-lg border border-border bg-surface-muted p-0.5"
-              >
-                <ThemeOption label="Light" selected />
-                <ThemeOption label="Dark" disabled />
-              </div>
-            }
           />
         </SettingsSection>
 

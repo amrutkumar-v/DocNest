@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { User } from '@supabase/supabase-js'
 
 import { getUserAvatarUrl, getUserInitials } from '@/lib/user'
@@ -19,19 +19,22 @@ export function UserAvatar({ user, className }: UserAvatarProps) {
   const avatarUrl = getUserAvatarUrl(user)
   const [failed, setFailed] = useState(false)
 
+  // A new user means a new image to try, so clear the previous failure.
+  useEffect(() => setFailed(false), [avatarUrl])
+
   const initials = getUserInitials(user)
   const showImage = Boolean(avatarUrl) && !failed
 
   const base = cn(
     'inline-flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full',
-    'bg-brand-subtle text-sm font-semibold text-brand-subtle-foreground',
+    'bg-brand-subtle text-xs font-semibold text-brand-subtle-foreground',
     className,
   )
 
   if (!showImage) {
     return (
       <span aria-hidden="true" className={base}>
-        {initials ?? '?'}
+        {initials ?? '—'}
       </span>
     )
   }

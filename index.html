@@ -4,15 +4,43 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f7f8fa" />
+    <meta name="theme-color" content="#f4f5f8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0d12" media="(prefers-color-scheme: dark)" />
     <meta
       name="description"
-      content="DocNest — Your documents, organized. A personal document management app to store, organize, search and track the expiry of your important documents."
+      content="DocNest — Your documents, organized. A personal document vault to store, organize, search and track the expiry of your important documents."
     />
     <title>DocNest — Your documents, organized.</title>
+
+    <script>
+      /*
+        Applies the saved theme before first paint.
+
+        Without this the page renders light and then snaps to dark once React
+        mounts, which reads as a flash on every navigation back to the tab.
+      */
+      ;(function () {
+        try {
+          var stored = window.localStorage.getItem('docnest-theme') || 'system'
+          var dark =
+            stored === 'dark' ||
+            (stored === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+          if (dark) document.documentElement.classList.add('dark')
+          document.documentElement.style.colorScheme = dark ? 'dark' : 'light'
+        } catch (error) {
+          /* Private browsing can block storage; fall back to the light theme. */
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <div style="padding: 2rem; font-family: system-ui, sans-serif; text-align: center">
+        DocNest needs JavaScript enabled to manage your document vault.
+      </div>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

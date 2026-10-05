@@ -7,10 +7,24 @@ type PageHeaderProps = {
   description?: string
   /** Right-aligned actions; stacks below the title on small screens. */
   actions?: ReactNode
+  /** Small label above the title, e.g. the active section. */
+  eyebrow?: string
   className?: string
 }
 
-export function PageHeader({ title, description, actions, className }: PageHeaderProps) {
+/**
+ * Standard page heading: eyebrow, title, description and actions.
+ *
+ * Every page uses this, so the distance between the header and the first piece
+ * of content is identical throughout the app.
+ */
+export function PageHeader({
+  title,
+  description,
+  actions,
+  eyebrow,
+  className,
+}: PageHeaderProps) {
   return (
     <div
       className={cn(
@@ -19,15 +33,28 @@ export function PageHeader({ title, description, actions, className }: PageHeade
       )}
     >
       <div className="min-w-0">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">{title}</h1>
+        {eyebrow ? (
+          <p className="mb-1.5 text-2xs font-semibold tracking-wider text-subtle-foreground uppercase">
+            {eyebrow}
+          </p>
+        ) : null}
+
+        <h1 className="text-xl font-semibold tracking-tight text-pretty text-foreground sm:text-2xl">
+          {title}
+        </h1>
+
         {description ? (
-          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-pretty text-muted-foreground">
             {description}
           </p>
         ) : null}
       </div>
 
-      {actions ? <div className="flex shrink-0 flex-wrap gap-2">{actions}</div> : null}
+      {actions ? (
+        <div className="flex shrink-0 flex-wrap items-center gap-2 [&>*]:flex-1 sm:[&>*]:flex-none">
+          {actions}
+        </div>
+      ) : null}
     </div>
   )
 }

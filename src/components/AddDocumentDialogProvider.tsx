@@ -1,15 +1,15 @@
 import { type ReactNode, useCallback, useMemo, useState } from 'react'
 
-import { AddDocumentDialog } from '@/components/AddDocumentDialog'
 import { AddDocumentDialogContext } from '@/components/add-document-context'
+import { AddDocumentDialog } from '@/components/documents/AddDocumentDialog'
 
 type AddDocumentDialogProviderProps = {
   children: ReactNode
 }
 
 /**
- * Owns the single Add Document dialog instance for the whole app so the
- * sidebar, mobile header and page-level CTAs can all open the same dialog.
+ * Owns the single upload dialog instance for the whole app, so the sidebar, the
+ * mobile header and every page-level call to action open the same dialog.
  */
 export function AddDocumentDialogProvider({ children }: AddDocumentDialogProviderProps) {
   const [open, setOpen] = useState(false)

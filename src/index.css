@@ -5,64 +5,119 @@
 /*
   DocNest design tokens.
 
-  Phase 1 ships the light theme only. Dark values are declared so the token
-  structure is ready for a future dark mode without touching components.
+  One token layer drives both themes. Components never hard-code a colour;
+  they reference a semantic name (`surface`, `border`, `muted-foreground`, …)
+  so light and dark stay in lockstep.
+
+  Scale notes:
+  - Surfaces get lighter/closer to the page as they come forward, which gives
+    depth through tone rather than heavy shadows.
+  - Shadows stay restrained: one card shadow, one popover shadow.
+  - Motion durations live here so every transition shares the same rhythm.
 */
+
 :root {
-  --background: #f6f7f9;
-  --surface: #ffffff;
-  --surface-muted: #f2f4f7;
-  --surface-hover: #f9fafb;
-
-  --foreground: #171a21;
-  --muted-foreground: #5c6470;
-  --subtle-foreground: #656d7a;
-
-  --border: #e3e7ed;
-  --border-strong: #d1d7e0;
-
-  --brand: #2e4bc7;
-  --brand-hover: #253ea9;
-  --brand-foreground: #ffffff;
-  --brand-subtle: #eef1fc;
-  --brand-subtle-foreground: #24388f;
-
-  --ring: #2e4bc7;
-
-  --radius: 0.75rem;
-
-  --shadow-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.06);
-  --shadow-popover: 0 12px 32px -8px rgb(16 24 40 / 0.16),
-    0 4px 10px -4px rgb(16 24 40 / 0.08);
-
   color-scheme: light;
+
+  /* Canvas */
+  --background: #f4f5f8;
+  --surface: #ffffff;
+  --surface-muted: #f5f6f9;
+  --surface-hover: #f7f8fb;
+  --surface-sunken: #edeff4;
+
+  /* Type */
+  --foreground: #12151b;
+  --muted-foreground: #565e6c;
+  --subtle-foreground: #6b7482;
+
+  /* Lines */
+  --border: #e2e5ec;
+  --border-strong: #cdd3de;
+
+  /* Brand */
+  --brand: #2f4ac4;
+  --brand-hover: #253dab;
+  --brand-active: #1f3493;
+  --brand-foreground: #ffffff;
+  --brand-subtle: #eceffb;
+  --brand-subtle-foreground: #21378f;
+  --brand-border: #ccd5f5;
+
+  /* Status */
+  --success: #0f7a52;
+  --success-subtle: #e6f4ee;
+  --success-foreground: #0b5c3d;
+  --warning: #9a5b06;
+  --warning-subtle: #fbf1e2;
+  --warning-foreground: #7d4a05;
+  --destructive: #b32424;
+  --destructive-hover: #991d1d;
+  --destructive-subtle: #fdeded;
+  --destructive-foreground: #8f1c1c;
+
+  --ring: #2f4ac4;
+  --ring-offset: #ffffff;
+
+  /* Shape */
+  --radius-app: 0.75rem;
+  --radius: 0.625rem;
+  --radius-lg: 0.875rem;
+
+  /* Elevation */
+  --shadow-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.05);
+  --shadow-raised: 0 4px 12px -4px rgb(16 24 40 / 0.1), 0 2px 4px -2px rgb(16 24 40 / 0.05);
+  --shadow-popover: 0 16px 40px -12px rgb(16 24 40 / 0.18), 0 4px 12px -6px rgb(16 24 40 / 0.1);
+
+  /* Motion — every interactive transition uses these. */
+  --duration-fast: 140ms;
+  --duration: 200ms;
+  --duration-slow: 280ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark {
-  --background: #0d1016;
-  --surface: #151a22;
-  --surface-muted: #1b212b;
-  --surface-hover: #1f2632;
-
-  --foreground: #e8ebf1;
-  --muted-foreground: #9aa4b2;
-  --subtle-foreground: #7d8794;
-
-  --border: #242b36;
-  --border-strong: #333c49;
-
-  --brand: #7c92f5;
-  --brand-hover: #93a6f8;
-  --brand-foreground: #0d1016;
-  --brand-subtle: #1b2233;
-  --brand-subtle-foreground: #b9c5fb;
-
-  --ring: #7c92f5;
-
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 1px 3px rgb(0 0 0 / 0.25);
-  --shadow-popover: 0 12px 32px -8px rgb(0 0 0 / 0.5), 0 4px 10px -4px rgb(0 0 0 / 0.4);
-
   color-scheme: dark;
+
+  --background: #0a0d12;
+  --surface: #12161d;
+  --surface-muted: #171c25;
+  --surface-hover: #1b212b;
+  --surface-sunken: #0e1218;
+
+  --foreground: #e9ecf2;
+  --muted-foreground: #9aa3b1;
+  --subtle-foreground: #818b99;
+
+  --border: #232a35;
+  --border-strong: #333c4a;
+
+  --brand: #8ba0f8;
+  --brand-hover: #9db0f9;
+  --brand-active: #b0bffb;
+  --brand-foreground: #0a0d12;
+  --brand-subtle: #1a2140;
+  --brand-subtle-foreground: #c3ccfb;
+  --brand-border: #2c3563;
+
+  --success: #34c48d;
+  --success-subtle: #10251d;
+  --success-foreground: #7fdcb4;
+  --warning: #e0a44a;
+  --warning-subtle: #261c0d;
+  --warning-foreground: #f0c07c;
+  --destructive: #f08585;
+  --destructive-hover: #f6a0a0;
+  --destructive-subtle: #2a1414;
+  --destructive-foreground: #f7a9a9;
+
+  --ring: #8ba0f8;
+  --ring-offset: #12161d;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.35), 0 1px 3px rgb(0 0 0 / 0.25);
+  --shadow-raised: 0 4px 12px -4px rgb(0 0 0 / 0.45), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-popover: 0 16px 40px -12px rgb(0 0 0 / 0.6), 0 4px 12px -6px rgb(0 0 0 / 0.4);
 }
 
 @theme inline {
@@ -70,6 +125,7 @@
   --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
   --color-surface-hover: var(--surface-hover);
+  --color-surface-sunken: var(--surface-sunken);
 
   --color-foreground: var(--foreground);
   --color-muted-foreground: var(--muted-foreground);
@@ -80,27 +136,65 @@
 
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
+  --color-brand-active: var(--brand-active);
   --color-brand-foreground: var(--brand-foreground);
   --color-brand-subtle: var(--brand-subtle);
   --color-brand-subtle-foreground: var(--brand-subtle-foreground);
+  --color-brand-border: var(--brand-border);
 
-  --radius-app: var(--radius);
+  --color-success: var(--success);
+  --color-success-subtle: var(--success-subtle);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-subtle: var(--destructive-subtle);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --radius-app: var(--radius-app);
+  --radius-control: var(--radius);
+  --radius-panel: var(--radius-lg);
 
   --shadow-card: var(--shadow-card);
+  --shadow-raised: var(--shadow-raised);
   --shadow-popover: var(--shadow-popover);
 
   --font-sans:
     ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
     'Noto Sans', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Type ramp — small, deliberate steps so hierarchy reads clearly. */
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1rem;
+  --text-xs--line-height: 1.125rem;
+  --text-sm--line-height: 1.375rem;
+  --text-base--line-height: 1.5rem;
+
+  --animate-enter: docnest-enter var(--duration) var(--ease-out) both;
+  --animate-overlay-in: docnest-fade-in var(--duration) ease-out;
+  --animate-overlay-out: docnest-fade-out var(--duration-fast) ease-in forwards;
+  --animate-dialog-in: docnest-dialog-in var(--duration) var(--ease-out);
+  --animate-dialog-out: docnest-dialog-out var(--duration-fast) ease-in forwards;
+  --animate-toast-in: docnest-toast-in var(--duration-slow) var(--ease-out) both;
+  --animate-toast-out: docnest-toast-out var(--duration) ease-in forwards;
+  --animate-skeleton: docnest-skeleton 1.6s var(--ease-in-out) infinite;
+  --animate-spin: docnest-spin 900ms linear infinite;
 }
 
 @layer base {
-  * {
+  *,
+  ::after,
+  ::before,
+  ::backdrop {
     border-color: var(--border);
   }
 
   html {
     -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -111,9 +205,13 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv11', 'ss01';
   }
 
-  /* Visible, consistent keyboard focus everywhere. */
+  /*
+    One focus treatment for the whole app: a ring in the brand colour with a
+    matching offset so it stays visible on cards, inputs and coloured buttons.
+  */
   :focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
@@ -124,35 +222,72 @@
     background-color: var(--brand-subtle);
     color: var(--brand-subtle-foreground);
   }
+
+  /* Long filenames and titles must never widen the layout. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  img,
+  svg,
+  video,
+  iframe {
+    max-width: 100%;
+  }
+}
+
+@layer components {
+  /*
+    Skeleton block. Opacity-only so it composites cheaply and never triggers
+    layout work while data loads.
+  */
+  .skeleton {
+    background-color: var(--surface-muted);
+    animation: var(--animate-skeleton);
+    border-radius: var(--radius);
+  }
+
+  /*
+    Press feedback for anything clickable. Scale is transform-only and the
+    duration is short enough to feel like an acknowledgement, not an animation.
+  */
+  .pressable {
+    transition-property: background-color, border-color, color, box-shadow, opacity, transform;
+    transition-duration: var(--duration-fast);
+    transition-timing-function: var(--ease-out);
+  }
+
+  .pressable:active:not(:disabled) {
+    transform: translateY(1px);
+  }
 }
 
 @layer utilities {
-  /* Subtle entrance used for page-level content. */
   .animate-enter {
-    animation: docnest-enter 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: var(--animate-enter);
   }
 
-  .animate-overlay-in {
-    animation: docnest-fade-in 180ms ease-out;
+  /* Horizontal scrollers (filter rows) hide their bar but stay scrollable. */
+  .no-scrollbar {
+    scrollbar-width: none;
   }
 
-  .animate-overlay-out {
-    animation: docnest-fade-out 140ms ease-in forwards;
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
-  .animate-dialog-in {
-    animation: docnest-dialog-in 200ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .animate-dialog-out {
-    animation: docnest-dialog-out 140ms ease-in forwards;
+  .text-pretty {
+    text-wrap: pretty;
   }
 }
 
 @keyframes docnest-enter {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -181,7 +316,7 @@
 @keyframes docnest-dialog-in {
   from {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.96);
+    transform: translate(-50%, -50%) scale(0.97);
   }
   to {
     opacity: 1;
@@ -196,7 +331,45 @@
   }
   to {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.97);
+    transform: translate(-50%, -50%) scale(0.985);
+  }
+}
+
+@keyframes docnest-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes docnest-toast-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(4px) scale(0.99);
+  }
+}
+
+@keyframes docnest-skeleton {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes docnest-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 

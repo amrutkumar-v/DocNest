@@ -5,6 +5,8 @@ import { RequireAuth } from '@/components/auth/RequireAuth'
 import { AddDocumentDialogProvider } from '@/components/AddDocumentDialogProvider'
 import { AppShell } from '@/components/layout/AppShell'
 import { AuthProvider } from '@/context/AuthProvider'
+import { ThemeProvider } from '@/context/ThemeProvider'
+import { ToastProvider } from '@/context/ToastProvider'
 import Categories from '@/pages/Categories'
 import Dashboard from '@/pages/Dashboard'
 import Documents from '@/pages/Documents'
@@ -49,11 +51,15 @@ export function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <AddDocumentDialogProvider>
-          <AppRoutes />
-        </AddDocumentDialogProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <ToastProvider>
+            <AddDocumentDialogProvider>
+              <AppRoutes />
+            </AddDocumentDialogProvider>
+          </ToastProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   )
 }

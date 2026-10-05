@@ -15,11 +15,13 @@ export function Select({ className, children, ...props }: React.ComponentProps<'
       <select
         data-slot="select"
         className={cn(
-          'h-10 w-full appearance-none rounded-lg border border-border bg-surface',
-          'pr-9 pl-3 text-sm text-foreground',
-          'transition-[border-color,box-shadow] focus-visible:border-brand',
-          'disabled:cursor-not-allowed disabled:bg-surface-muted disabled:opacity-100',
-          'disabled:text-subtle-foreground',
+          'h-10 w-full appearance-none rounded-control border border-border bg-surface',
+          'pr-9 pl-3 text-sm text-foreground shadow-xs',
+          'transition-[border-color,box-shadow] duration-[140ms]',
+          'hover:border-border-strong',
+          'focus-visible:border-brand focus-visible:ring-[3px] focus-visible:ring-brand/15 focus-visible:outline-none',
+          'aria-invalid:border-destructive',
+          'disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-subtle-foreground',
         )}
         {...props}
       >
